@@ -1,0 +1,38 @@
+{
+    "name": "vsc-ebpf-example",
+    "dockerComposeFile": "../container/podman-compose.yml",
+    "service": "devcontainer",
+    "workspaceFolder": "/src",
+    "containerEnv": {
+        "DEVCONTAINER": "1",
+        "NODE_EXTRA_CA_CERTS": "/etc/ssl/certs/ca-certificates.crt"
+    },
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "cheshirekow.cmake-format",
+                "davidanson.vscode-markdownlint",
+                "editorconfig.editorconfig",
+                "foxundermoon.shell-format",
+                "huizhou.githd",
+                "mhutchie.git-graph",
+                "ms-vscode.cmake-tools",
+                "ms-vscode.cpptools-extension-pack",
+                "sonarsource.sonarlint-vscode",
+                "streetsidesoftware.code-spell-checker",
+                "yzhang.markdown-all-in-one"
+            ],
+            "settings": {
+                "terminal.integrated.profiles.linux": {
+                    "bash": {
+                        "path": "/usr/bin/bash"
+                    }
+                },
+                "editor.indentSize": 4,
+                "editor.tabSize": 4,
+                "editor.insertSpaces": false,
+                "terminal.integrated.defaultProfile.linux": "bash"
+            }
+        }
+    }
+}

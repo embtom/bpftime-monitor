@@ -1,0 +1,104 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "[amd64] uds-daemon debug",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/uds-daemon-example/build/amd64-Debug/uds-daemon/uds-daemon",
+            "cwd": "${workspaceFolder}",
+            "MIMode": "gdb",
+            "miDebuggerPath": "/usr/bin/gdb",
+            "stopAtEntry": true,
+            "externalConsole": false
+        },
+        {
+            "name": "[amd64] remote uds-daemon debug",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/uds-daemon-example/build/amd64-Debug/uds-daemon/uds-daemon",
+            "cwd": "${workspaceFolder}",
+            "MIMode": "gdb",
+            "miDebuggerPath": "/usr/bin/gdb",
+            "miDebuggerServerAddress": "localhost:4242",
+            "stopAtEntry": true,
+            "externalConsole": false,
+            "sourceFileMap": {
+                "/src/uds-daemon-example": "${workspaceFolder}/uds-daemon-example"
+            }
+        },
+        {
+            "name": "[amd64] remote uds-daemon attach",
+            "type": "cppdbg",
+            "request": "launch",
+            "MIMode": "gdb",
+            "miDebuggerPath": "/usr/bin/gdb",
+            "miDebuggerServerAddress": "localhost:4242",
+            "program": "/usr/bin/uds-daemon",
+            "cwd": "${workspaceFolder}",
+            "sourceFileMap": {
+                "/build": "${workspaceFolder}/uds-daemon-example/build"
+            },
+            "setupCommands": [
+                {
+                    "text": "dir ${workspaceFolder}/uds-daemon-example",
+                    "ignoreFailures": false
+                }
+            ]
+        },
+        { // ssh -L 6000:localhost:6000 target
+            "name": "[arm64] uds-daemon",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${command:cmake.buildDirectory}/uds-daemon/uds-daemon",
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "stopAtEntry": true,
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "miDebuggerPath": "/usr/bin/gdb-multiarch",
+            "miDebuggerServerAddress": "localhost:6000",
+            "setupCommands": [
+                {
+                    "text": "set architecture aarch64"
+                },
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ],
+            "targetArchitecture": "arm64"
+        },
+        {
+            "name": "Debug CTest",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${command:cmake.launchTargetPath}", // test executable path
+            "args": [], // will be filled by CMake Tools
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "miDebuggerPath": "/usr/bin/gdb"
+        },
+        {
+            "name": "Debug UnitTest",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/uds-daemon-example/build/amd64-Debug/test/unit_tests", // test executable path
+            "args": [
+                "--gtest_filter=UdsClientTest.ReconnectAfterDisconnect"
+            ],
+            "environment": [],
+            "cwd": "${workspaceFolder}",
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "miDebuggerPath": "/usr/bin/gdb"
+        }
+    ]
+}

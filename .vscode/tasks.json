@@ -1,0 +1,116 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build",
+            "type": "shell",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "command": "make",
+            "args": [
+                "${input:buildVariant}",
+                "${input:cleanBuild}"
+            ],
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": "build"
+        },
+        {
+            "label": "Run ctest (active build)",
+            "type": "shell",
+            "command": "bash",
+            "args": [
+                "-c",
+                "cd ${command:cmake.buildDirectory} && ctest --output-on-failure --verbose --progress --no-tests=error"
+            ],
+            "options": {
+                "env": {
+                    "CTEST_OUTPUT_ON_FAILURE": "1",
+                    "CTEST_COLOR": "ON"
+                }
+            },
+            "problemMatcher": [],
+            "group": "test",
+            "presentation": {
+                "reveal": "always",
+                "echo": true,
+                "focus": true,
+                "panel": "dedicated",
+                "clear": true
+            }
+        },
+        {
+            "label": "Run uds-daemon",
+            "type": "shell",
+            "command": "${workspaceFolder}/uds-daemon-example/build/amd64-${input:buildType}/uds-daemon/uds-daemon",
+            "options": {
+                "cwd": "${workspaceFolder}/uds-daemon-example/build/amd64-${input:buildType}/uds-daemon"
+            },
+            "args": [
+                "--interactive"
+            ],
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "new",
+                "group": "sockactGroup"
+            }
+        },
+        {
+            "label": "Run udsctl",
+            "type": "shell",
+            "command": "${workspaceFolder}/uds-daemon-example/build/amd64-${input:buildType}/udsctl/udsctl",
+            "options": {
+                "cwd": "${workspaceFolder}/uds-daemon-example/build/amd64-${input:buildType}/udsctl"
+            },
+            "args": [
+                "--socket=/run/sockact-local-a.sock"
+            ],
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared",
+                "group": "sockactGroup"
+            }
+        }
+    ],
+    "inputs": [
+        {
+            "id": "buildVariant",
+            "type": "pickString",
+            "description": "Select build variant",
+            "options": [
+                "amd64-Release",
+                "amd64-Debug",
+                "amd64-debbuild",
+                "arm64-Release",
+                "arm64-Debug",
+                "arm64-debbuild"
+            ],
+            "default": "amd64-Release"
+        },
+        {
+            "id": "cleanBuild",
+            "type": "pickString",
+            "description": "Do a clean build?",
+            "options": [
+                "",       // empty string = no clean
+                "CLEAN=1"   // pass 'clean' to make
+            ],
+            "default": ""
+        },
+        {
+            "id": "buildType",
+            "type": "pickString",
+            "description": "Select the build type",
+            "options": [
+                "Debug",
+                "Release"
+            ]
+        },
+    ]
+}

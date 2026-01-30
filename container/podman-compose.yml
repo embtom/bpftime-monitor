@@ -1,0 +1,29 @@
+version: "4"
+
+services:
+  builder:
+    build:
+      context: ..
+      dockerfile: container/Containerfile
+      target: build-env
+    image: ebpf-builder:latest
+    volumes:
+      - ..:/src:Z
+    working_dir: "/src"
+    network_mode: host
+    environment:
+      - INSIDE_CONTAINER=1
+    entrypoint: ["dumb-init", "--", "make"]
+
+  devcontainer:
+    build:
+      context: ..
+      dockerfile: container/Containerfile
+      target: dev-env
+    image: ebpf-devcontainer:latest
+    volumes:
+      - ..:/src:Z
+    network_mode: host
+    environment:
+      - INSIDE_CONTAINER=1
+    entrypoint: ["dumb-init", "--", "sleep", "infinity"]

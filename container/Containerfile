@@ -1,0 +1,87 @@
+###########################################################
+# Stage 1: build‑env image
+###########################################################
+FROM debian:trixie AS build-env
+
+ARG DEBIAN_FRONTEND=noninteractive
+
+ENV PIP_ROOT_USER_ACTION=ignore
+ENV PIP_BREAK_SYSTEM_PACKAGES=1
+ENV LANG=en_US.UTF-8
+ENV LC_ALL=en_US.UTF-8
+
+# Core build‑environment packages
+RUN apt-get update \
+ && apt-get install --yes --no-install-recommends \
+    build-essential \
+    cdbs \
+    clang-format \
+    cmake \
+    devscripts \
+    equivs \
+    fakeroot \
+    gcc-aarch64-linux-gnu \
+    g++-aarch64-linux-gnu \
+    git \
+    libc6-dev-arm64-cross \
+    libcxxopts-dev \
+    locales \
+    nano \
+    ninja-build \
+    openssh-client \
+    pkg-config \
+    qemu-user-static \
+    shfmt \
+    unzip \
+    wget \
+    zsh \
+    # runtime
+    default-jre-headless \
+ && sed -i 's/^# *en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen \
+ && locale-gen \
+ && rm -rf /var/lib/apt/lists/*
+
+# Multi‑arch libraries (amd64 & arm64)
+RUN dpkg --add-architecture arm64 \
+ && apt-get update \
+ && for arch in amd64 arm64; do \
+      apt-get install --yes --no-install-recommends \
+        libbpf-dev:${arch} \
+        libgtest-dev:${arch} \
+        libspdlog-dev:${arch} \
+        pkgconf:${arch} ; \
+    done \
+ && rm -rf /var/lib/apt/lists/*
+
+ENTRYPOINT ["/usr/bin/dumb-init", "--"]
+
+###########################################################
+# Stage 2: dev‑env container
+###########################################################
+FROM build-env AS dev-env
+
+# Interactive tooling for developers
+RUN apt-get update \
+ && apt-get install --yes --no-install-recommends \
+    bash-completion \
+    gdb \
+    gdb-multiarch \
+    python3-pip \
+    starship \
+ && rm -rf /var/lib/apt/lists/*
+
+# Enable bash completion and Starship prompt
+RUN cat <<'EOF' >> /etc/bash.bashrc
+if [ -f /usr/share/bash-completion/bash_completion ]; then
+  . /usr/share/bash-completion/bash_completion
+fi
+
+# Starship prompt
+eval "$(starship init bash)"
+EOF
+
+# Install cmake‑format via pip (break‑system‑packages already allowed)
+RUN pip3 install --no-cache-dir \
+  cmake-format
+
+CMD ["/usr/bin/bash"]
