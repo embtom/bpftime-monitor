@@ -1,0 +1,4 @@
+#!/bin/bash
+sudo timedatectl set-ntp false
+sudo date -s "2 hours ago"
+sudo timedatectl set-ntp true

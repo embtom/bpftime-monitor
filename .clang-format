@@ -1,10 +1,33 @@
 BasedOnStyle: LLVM
 BreakBeforeBraces: Custom
 BraceWrapping:
+  AfterCaseLabel: false
+  AfterControlStatement: Never
+  AfterEnum: false
   AfterFunction: true
-ConstructorInitializerAllOnOneLineOrOnePerLine: false
-ConstructorInitializerIndentWidth: 1
-BreakConstructorInitializers: BeforeComma
-ColumnLimit: 100
+  AfterNamespace: false
+  AfterStruct: false
+  AfterUnion: false
+  AfterExternBlock: false
+  BeforeCatch: false
+  BeforeElse: false
+  IndentBraces: false
+AllowShortCaseLabelsOnASingleLine: true
 IndentWidth: 4
+AllowShortFunctionsOnASingleLine: false
+KeepEmptyLinesAtTheStartOfBlocks: false
+AllowShortEnumsOnASingleLine: false
+PointerAlignment: Left
+ColumnLimit: 100
 AlwaysBreakTemplateDeclarations: Yes
+AllowShortIfStatementsOnASingleLine: false
+AllowShortBlocksOnASingleLine: false
+AllowShortLoopsOnASingleLine: false
+AlignAfterOpenBracket: AlwaysBreak
+ConstructorInitializerAllOnOneLineOrOnePerLine: true
+BreakConstructorInitializers: AfterColon
+ConstructorInitializerIndentWidth: 1
+AllowAllArgumentsOnNextLine: true
+BinPackArguments: false
+BinPackParameters: false
+Cpp11BracedListStyle: true

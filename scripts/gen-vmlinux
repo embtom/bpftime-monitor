@@ -1,0 +1,27 @@
+#!/usr/bin/bash
+# gen-vmlinux.sh – create vmlinux.h from the running kernel
+
+SCRIPT_DIR="$(CDPATH='' cd -- "$(dirname -- "$0")" && pwd -P)"
+
+set -euo pipefail
+
+KVER=$(uname -r)                      # current kernel version
+PKG="linux-image-${KVER}-dbg"         # debug package name
+VMLINUX="/usr/lib/debug/boot/vmlinux-${KVER}"
+OUT="vmlinux.h"
+
+if ! dpkg -s "$PKG" >/dev/null 2>&1; then
+    echo "Installing $PKG …"
+    apt-get update
+    apt-get install --yes "$PKG"
+fi
+
+if [[ ! -f "$VMLINUX" ]]; then
+    echo "ERROR: $VMLINUX not found"
+    exit 1
+fi
+
+echo "Generating $OUT …"
+bpftool btf dump file "$VMLINUX" format c > "$OUT"
+
+echo "Done $OUT created."

@@ -12,7 +12,6 @@
             "command": "make",
             "args": [
                 "${input:buildVariant}",
-                "${input:cleanBuild}"
             ],
             "problemMatcher": [
                 "$gcc"
@@ -42,40 +41,6 @@
                 "panel": "dedicated",
                 "clear": true
             }
-        },
-        {
-            "label": "Run uds-daemon",
-            "type": "shell",
-            "command": "${workspaceFolder}/uds-daemon-example/build/amd64-${input:buildType}/uds-daemon/uds-daemon",
-            "options": {
-                "cwd": "${workspaceFolder}/uds-daemon-example/build/amd64-${input:buildType}/uds-daemon"
-            },
-            "args": [
-                "--interactive"
-            ],
-            "problemMatcher": [],
-            "presentation": {
-                "reveal": "always",
-                "panel": "new",
-                "group": "sockactGroup"
-            }
-        },
-        {
-            "label": "Run udsctl",
-            "type": "shell",
-            "command": "${workspaceFolder}/uds-daemon-example/build/amd64-${input:buildType}/udsctl/udsctl",
-            "options": {
-                "cwd": "${workspaceFolder}/uds-daemon-example/build/amd64-${input:buildType}/udsctl"
-            },
-            "args": [
-                "--socket=/run/sockact-local-a.sock"
-            ],
-            "problemMatcher": [],
-            "presentation": {
-                "reveal": "always",
-                "panel": "shared",
-                "group": "sockactGroup"
-            }
         }
     ],
     "inputs": [
@@ -86,31 +51,10 @@
             "options": [
                 "amd64-Release",
                 "amd64-Debug",
-                "amd64-debbuild",
                 "arm64-Release",
                 "arm64-Debug",
-                "arm64-debbuild"
             ],
             "default": "amd64-Release"
-        },
-        {
-            "id": "cleanBuild",
-            "type": "pickString",
-            "description": "Do a clean build?",
-            "options": [
-                "",       // empty string = no clean
-                "CLEAN=1"   // pass 'clean' to make
-            ],
-            "default": ""
-        },
-        {
-            "id": "buildType",
-            "type": "pickString",
-            "description": "Select the build type",
-            "options": [
-                "Debug",
-                "Release"
-            ]
-        },
+        }
     ]
 }

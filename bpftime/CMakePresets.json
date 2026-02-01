@@ -1,0 +1,262 @@
+{
+    "version": 7,
+    "cmakeMinimumRequired": {
+        "major": 3,
+        "minor": 31,
+        "patch": 0
+    },
+    "configurePresets": [
+        {
+            "name": "base",
+            "hidden": true,
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/build/${presetName}/install"
+            }
+        },
+        {
+            "name": "base-amd64",
+            "hidden": true,
+            "inherits": "base",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release"
+            }
+        },
+        {
+            "name": "base-aarch64",
+            "hidden": true,
+            "inherits": "base",
+            "toolchainFile": "${sourceDir}/cmake/toolchain-gcc-arm64.cmake",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release"
+            }
+        },
+        {
+            "name": "switch-debug",
+            "hidden": true,
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
+        },
+        {
+            "name": "switch-relwithdebinfo",
+            "hidden": true,
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "RelWithDebInfo"
+            }
+        },
+        {
+            "name": "amd64-Release",
+            "inherits": "base-amd64"
+        },
+        {
+            "name": "amd64-Debug",
+            "inherits": [
+                "switch-debug",
+                "base-amd64"
+            ]
+        },
+        {
+            "name": "amd64-RelWithDebInfo",
+            "inherits": [
+                "switch-relwithdebinfo",
+                "base-amd64"
+            ]
+        },
+        {
+            "name": "arm64-Release",
+            "inherits": "base-aarch64"
+        },
+        {
+            "name": "arm64-Debug",
+            "inherits": [
+                "switch-debug",
+                "base-aarch64"
+            ]
+        },
+        {
+            "name": "arm64-RelWithDebInfo",
+            "inherits": [
+                "switch-relwithdebinfo",
+                "base-aarch64"
+            ]
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "amd64-Release",
+            "configurePreset": "amd64-Release",
+            "targets": ["install"]
+        },
+        {
+            "name": "amd64-Debug",
+            "configurePreset": "amd64-Debug",
+            "targets": ["install"]
+        },
+        {
+            "name": "amd64-RelWithDebInfo",
+            "configurePreset": "amd64-RelWithDebInfo",
+            "targets": ["install"]
+
+        },
+        {
+            "name": "arm64-Release",
+            "configurePreset": "arm64-Release",
+            "targets": ["install"]
+        },
+        {
+            "name": "arm64-Debug",
+            "configurePreset": "arm64-Debug",
+            "targets": ["install"]
+        },
+        {
+            "name": "arm64-RelWithDebInfo",
+            "configurePreset": "arm64-RelWithDebInfo",
+            "targets": ["install"]
+        }
+    ],
+    "testPresets": [
+        {
+            "name": "amd64-Release",
+            "configurePreset": "amd64-Release",
+            "output": {
+                "outputOnFailure": true
+            },
+            "execution": {
+                "noTestsAction": "error",
+                "stopOnFailure": true
+            }
+        },
+        {
+            "name": "amd64-Debug",
+            "configurePreset": "amd64-Debug",
+            "output": {
+                "outputOnFailure": true
+            },
+            "execution": {
+                "noTestsAction": "error",
+                "stopOnFailure": true
+            }
+        },
+        {
+            "name": "amd64-RelWithDebInfo",
+            "configurePreset": "amd64-RelWithDebInfo",
+            "output": {
+                "outputOnFailure": true
+            },
+            "execution": {
+                "noTestsAction": "error",
+                "stopOnFailure": true
+            }
+        },
+        {
+            "name": "arm64-Release",
+            "configurePreset": "arm64-Release",
+            "output": {
+                "outputOnFailure": true
+            },
+            "execution": {
+                "noTestsAction": "error",
+                "stopOnFailure": true
+            }
+        },
+        {
+            "name": "arm64-Debug",
+            "configurePreset": "arm64-Debug",
+            "output": {
+                "outputOnFailure": true
+            },
+            "execution": {
+                "noTestsAction": "error",
+                "stopOnFailure": true
+            }
+        },
+        {
+            "name": "arm64-RelWithDebInfo",
+            "configurePreset": "arm64-RelWithDebInfo",
+            "output": {
+                "outputOnFailure": true
+            },
+            "execution": {
+                "noTestsAction": "error",
+                "stopOnFailure": true
+            }
+        }
+    ],
+    "workflowPresets": [
+        {
+            "name": "amd64-Release",
+            "displayName": "AMD64 Release",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "amd64-Release"
+                },
+                {
+                    "type": "build",
+                    "name": "amd64-Release"
+                },
+                {
+                    "type": "test",
+                    "name": "amd64-Release"
+                }
+            ]
+        },
+        {
+            "name": "amd64-Debug",
+            "displayName": "AMD64 Debug",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "amd64-Debug"
+                },
+                {
+                    "type": "build",
+                    "name": "amd64-Debug"
+                },
+                {
+                    "type": "test",
+                    "name": "amd64-Debug"
+                }
+            ]
+        },
+        {
+            "name": "arm64-Release",
+            "displayName": "ARM64 Release",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "arm64-Release"
+                },
+                {
+                    "type": "build",
+                    "name": "arm64-Release"
+                },
+                {
+                    "type": "test",
+                    "name": "arm64-Release"
+                }
+            ]
+        },
+        {
+            "name": "arm64-Debug",
+            "displayName": "ARM64 Debug",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "arm64-Debug"
+                },
+                {
+                    "type": "build",
+                    "name": "arm64-Debug"
+                },
+                {
+                    "type": "test",
+                    "name": "arm64-Debug"
+                }
+            ]
+        }
+    ]
+}

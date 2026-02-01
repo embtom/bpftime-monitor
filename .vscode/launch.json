@@ -5,10 +5,10 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "[amd64] uds-daemon debug",
+            "name": "[amd64] ebpf-clock-adjust",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/uds-daemon-example/build/amd64-Debug/uds-daemon/uds-daemon",
+            "program": "${workspaceFolder}/bpftime/build/amd64-Debug/install/bin/bpftime",
             "cwd": "${workspaceFolder}",
             "MIMode": "gdb",
             "miDebuggerPath": "/usr/bin/gdb",
@@ -16,10 +16,10 @@
             "externalConsole": false
         },
         {
-            "name": "[amd64] remote uds-daemon debug",
+            "name": "[amd64] remote ebpf-clock-adjust",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/uds-daemon-example/build/amd64-Debug/uds-daemon/uds-daemon",
+            "program": "${workspaceFolder}/bpftime/build/amd64-Debug/install/bin/bpftime",
             "cwd": "${workspaceFolder}",
             "MIMode": "gdb",
             "miDebuggerPath": "/usr/bin/gdb",
@@ -27,7 +27,7 @@
             "stopAtEntry": true,
             "externalConsole": false,
             "sourceFileMap": {
-                "/src/uds-daemon-example": "${workspaceFolder}/uds-daemon-example"
+                "/src/bpftime": "${workspaceFolder}/bpftime"
             }
         },
         {
@@ -40,11 +40,11 @@
             "program": "/usr/bin/uds-daemon",
             "cwd": "${workspaceFolder}",
             "sourceFileMap": {
-                "/build": "${workspaceFolder}/uds-daemon-example/build"
+                "/build": "${workspaceFolder}/ebpf-clock-adjtime/build"
             },
             "setupCommands": [
                 {
-                    "text": "dir ${workspaceFolder}/uds-daemon-example",
+                    "text": "dir ${workspaceFolder}/ebpf-clock-adjtime",
                     "ignoreFailures": false
                 }
             ]
@@ -53,7 +53,7 @@
             "name": "[arm64] uds-daemon",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${command:cmake.buildDirectory}/uds-daemon/uds-daemon",
+            "program": "${command:cmake.buildDirectory}/ebpf-clock-adjust",
             "args": [],
             "cwd": "${workspaceFolder}",
             "stopAtEntry": true,
@@ -90,7 +90,7 @@
             "name": "Debug UnitTest",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/uds-daemon-example/build/amd64-Debug/test/unit_tests", // test executable path
+            "program": "${workspaceFolder}/ebpf-clock-adjtime/build/amd64-Debug/test/unit_tests", // test executable path
             "args": [
                 "--gtest_filter=UdsClientTest.ReconnectAfterDisconnect"
             ],

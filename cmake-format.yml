@@ -1,0 +1,33 @@
+{
+  "parse": {
+    "additional_commands": {
+      "ebpf_build": {
+        "kwargs": {
+          "TARGET": 1,
+          "SOURCES": "+",
+          "OBJECT": 1
+        }
+      },
+      "ebpf_skeleton": {
+        "kwargs": {
+          "TARGET": 1,
+          "OBJECT": 1,
+          "SKELETON": 1
+        }
+      }
+    }
+  },
+
+  "format": {
+    "line_width": 100,
+    "tab_size": 4,
+
+    "max_pargs_hwrap": 2,
+    "max_subargs_per_line": 3,
+
+    "dangle_parens": true,
+
+    "separate_ctrl_name_with_space": false,
+    "separate_fn_name_with_space": false
+  }
+}

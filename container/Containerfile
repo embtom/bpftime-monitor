@@ -13,30 +13,24 @@ ENV LC_ALL=en_US.UTF-8
 # Core build‑environment packages
 RUN apt-get update \
  && apt-get install --yes --no-install-recommends \
+    bpftool \
     build-essential \
     cdbs \
-    clang-format \
+    clang \
     cmake \
     devscripts \
+    dumb-init \
     equivs \
     fakeroot \
-    gcc-aarch64-linux-gnu \
     g++-aarch64-linux-gnu \
+    gcc-aarch64-linux-gnu \
     git \
     libc6-dev-arm64-cross \
     libcxxopts-dev \
     locales \
-    nano \
     ninja-build \
-    openssh-client \
     pkg-config \
     qemu-user-static \
-    shfmt \
-    unzip \
-    wget \
-    zsh \
-    # runtime
-    default-jre-headless \
  && sed -i 's/^# *en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen \
  && locale-gen \
  && rm -rf /var/lib/apt/lists/*
@@ -53,35 +47,44 @@ RUN dpkg --add-architecture arm64 \
     done \
  && rm -rf /var/lib/apt/lists/*
 
-ENTRYPOINT ["/usr/bin/dumb-init", "--"]
-
 ###########################################################
 # Stage 2: dev‑env container
 ###########################################################
 FROM build-env AS dev-env
 
-# Interactive tooling for developers
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+
 RUN apt-get update \
  && apt-get install --yes --no-install-recommends \
-    bash-completion \
-    gdb \
-    gdb-multiarch \
-    python3-pip \
-    starship \
+        bash-completion \
+        ca-certificates \
+        clang-format \
+        cmake-format \
+        curl \
+        default-jdk-headless \
+        gdb \
+        gdb-multiarch \
+        gnupg2 \
+        nano \
+        openssh-client \
+        python3-pip \
+        shfmt \
+        starship \
+        unzip \
+        wget \
+        zsh && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+ && apt-get install -y --no-install-recommends nodejs=20.* \
  && rm -rf /var/lib/apt/lists/*
 
-# Enable bash completion and Starship prompt
 RUN cat <<'EOF' >> /etc/bash.bashrc
 if [ -f /usr/share/bash-completion/bash_completion ]; then
   . /usr/share/bash-completion/bash_completion
 fi
 
-# Starship prompt
 eval "$(starship init bash)"
 EOF
-
-# Install cmake‑format via pip (break‑system‑packages already allowed)
-RUN pip3 install --no-cache-dir \
-  cmake-format
 
 CMD ["/usr/bin/bash"]

@@ -1,0 +1,13 @@
+#!/bin/bash
+set -euo pipefail
+
+PORT=${1:-4242}             # Default gdbserver port
+BUILD_TYPE=${2:-Debug}
+
+TOPDIR=$(git rev-parse --show-toplevel)
+BUILD_DIR="$TOPDIR/bpftime/build/amd64-$BUILD_TYPE"
+
+echo "Start gdbserver with $PORT"
+echo "Debug ebpf-clock-adjust from $BUILD_DIR"
+
+sudo gdbserver --once ":$PORT" "$BUILD_DIR/install/bin/bpftime"

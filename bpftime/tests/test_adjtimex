@@ -1,0 +1,3 @@
+#!/bin/bash
+
+sudo adjtimex --tick 10000
