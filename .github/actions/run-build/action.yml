@@ -1,0 +1,27 @@
+name: "Run build"
+description: "Run the build based on prepared builder environment"
+author: "embtom"
+
+inputs:
+  service:
+    description: "The service that was used for built"
+    required: true
+  build-target:
+    description: "The build target to run"
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+
+    - name: Run build
+      shell: bash
+      run: |
+        SERVICE="${{ inputs.service }}"
+        BUILD_TARGET="${{ inputs.build-target }}"
+        if [ -z "$SERVICE" ]; then
+          echo "ERROR: No service provided."
+          exit 1
+        fi
+        podman-compose -f container/podman-compose.yml \
+            run --rm "$SERVICE" "$BUILD_TARGET"

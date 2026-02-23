@@ -1,0 +1,71 @@
+name: "Prepare builder"
+description: "Prepares build environment using Podman with GHCR caching"
+author: "embtom"
+
+inputs:
+  service:
+    description: "The service in podmancompose.yml"
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Install Podman and podman-compose
+      uses: ./.github/actions/setup-podman
+
+    - name: Login to GHCR
+      shell: bash
+      run: |
+        echo "${{ github.token }}" | podman login ghcr.io -u "${{ github.actor }}" --password-stdin
+
+    - name: Read image name from compose
+      id: image-name
+      shell: bash
+      run: |
+        IMAGE=$(yq -r '.services."${{ inputs.service }}".image' container/podman-compose.yml)
+        BASE_IMAGE="${IMAGE%%:*}"
+        HASH=$(sha256sum container/Containerfile | cut -d " " -f1)
+        echo "image=${IMAGE}" >> $GITHUB_OUTPUT
+
+        CACHE_IMAGE="ghcr.io/${{ github.repository_owner }}/cache-${BASE_IMAGE}:${HASH}"
+
+        echo "hash=${HASH}" >> $GITHUB_OUTPUT
+        echo "cache-image=${CACHE_IMAGE}" >> $GITHUB_OUTPUT
+
+    - name: Try pulling cache from GHCR
+      id: pull-cache
+      shell: bash
+      run: |
+        echo "Trying to pull cache image: ${{ steps.image-name.outputs.cache-image }}"
+        if podman pull "${{ steps.image-name.outputs.cache-image }}"; then
+          echo "cache-hit=true" >> $GITHUB_OUTPUT
+        else
+          echo "cache-hit=false" >> $GITHUB_OUTPUT
+        fi
+
+    - name: Load cached image tag into local tag
+      if: steps.pull-cache.outputs.cache-hit == 'true'
+      shell: bash
+      run: |
+        podman tag "${{ steps.image-name.outputs.cache-image }}" \
+          "${{ steps.image-name.outputs.image }}"
+
+        echo "Loaded cached image: ${{ steps.image-name.outputs.image }}"
+
+    - name: Build image if cache miss
+      if: steps.pull-cache.outputs.cache-hit == 'false'
+      shell: bash
+      run: |
+        echo "Cache miss → building image…"
+        podman-compose -f container/podman-compose.yml build "${{ inputs.service }}"
+
+    - name: Push updated image to GHCR as cache
+      shell: bash
+      run: |
+        podman tag "${{ steps.image-name.outputs.image }}" \
+          "${{ steps.image-name.outputs.cache-image }}"
+
+        podman push "${{ steps.image-name.outputs.cache-image }}"
